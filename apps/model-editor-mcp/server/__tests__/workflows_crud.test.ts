@@ -79,6 +79,25 @@ describe("createWorkflowTool", () => {
     expect(c.write).not.toHaveBeenCalled();
   });
 
+  it("returns VALIDATION_FAILED (no write) for a retired schema tag — cyoda-go refuses it on import, and a NEW file has no reason to carry one", async () => {
+    const c = ctx([]);
+    const r = await createWorkflowTool({ name: "Pledge", content: PLEDGE.replace('"1.3"', '"1.0"') }, c);
+    expect(r.isError).toBe(true);
+    const sc = r.structuredContent as { code: string; diagnostics: { code: string; severity: string }[] };
+    expect(sc.code).toBe("VALIDATION_FAILED");
+    expect(sc.diagnostics).toContainEqual(
+      expect.objectContaining({ code: "workflow-schema-version-outdated", severity: "error" }),
+    );
+    expect(c.write).not.toHaveBeenCalled();
+  });
+
+  it("accepts the lowest still-supported schema tag", async () => {
+    const c = ctx([]);
+    const r = await createWorkflowTool({ name: "Pledge", content: PLEDGE.replace('"1.3"', '"1.1"') }, c);
+    expect(r.isError).toBeFalsy();
+    expect(c.write).toHaveBeenCalledTimes(1);
+  });
+
   it("writes the CANONICAL serialized document (not the raw import-payload) at a path derived from workflowGlobs", async () => {
     const c = ctx([]);
     const r = await createWorkflowTool({ name: "Pledge", content: PLEDGE }, c);

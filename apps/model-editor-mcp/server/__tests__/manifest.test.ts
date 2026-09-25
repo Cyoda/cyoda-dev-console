@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { parseImportPayload, serializeImportPayload, validateAll } from "@cyoda/workflow-core";
+import { getDialect, LATEST_CYODA_VERSION, parseImportPayload, serializeImportPayload, validateAll } from "@cyoda/workflow-core";
 import { TOOL_MANIFEST } from "../manifest.js";
 import { makeDispatcher } from "../dispatch.js";
 import type { ToolHandler } from "../envelope.js";
@@ -24,6 +24,14 @@ describe("TOOL_MANIFEST", () => {
     const names = TOOL_MANIFEST.map((t) => t.name);
     expect(new Set(names).size).toBe(names.length); // no duplicates
     expect([...names].sort()).toEqual([...EXPECTED].sort());
+  });
+  it("create_workflow states the current schema tag and the accepted range, both derived from the dialect", () => {
+    const dialect = getDialect(LATEST_CYODA_VERSION);
+    const desc = TOOL_MANIFEST.find((t) => t.name === "create_workflow")!.description;
+    expect(desc).toContain(`version: "${dialect.schemaVersionTag}"`);
+    for (const r of dialect.acceptedSchemaVersions ?? []) {
+      expect(desc).toContain(`${r.major}.${r.minMinor}–${r.major}.${r.maxMinor}`);
+    }
   });
   it("every entry has a non-empty description and a JSON-Schema object inputSchema", () => {
     for (const entry of TOOL_MANIFEST) {

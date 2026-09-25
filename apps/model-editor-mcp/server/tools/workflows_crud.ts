@@ -21,6 +21,9 @@ import { findByName, resolveWorkflowCreatePath } from "../discovery.js";
  * invalid JSON (`INVALID_JSON`); or a semantically-invalid document (`VALIDATION_FAILED`,
  * identical envelope shape to `update_workflow`'s).
  */
+/** Core's diagnostic for a workflow `version` tag below the target server's supported range. */
+const RETIRED_SCHEMA_TAG = "workflow-schema-version-outdated";
+
 export async function createWorkflowTool(args: unknown, ctx: ToolContext): Promise<McpResult> {
   const input = createWorkflowInput.safeParse(args);
   if (!input.success) throw err("INVALID_ARGS", input.error.message);
@@ -35,8 +38,14 @@ export async function createWorkflowTool(args: unknown, ctx: ToolContext): Promi
   // `parseImportPayload` already runs `validateSemantics` into `parsed.issues` — source every
   // diagnostic from here alone, same rule `update_workflow` follows (see its comment).
   const parsed = ctx.parseImport(content);
-  if (!parsed.document || parsed.issues.some((i) => i.severity === "error")) {
-    return validationFailed(parsed.issues);
+  // A retired schema tag is only a warning in core (an existing file must still open so it can
+  // be fixed), but cyoda-go refuses it on import and a NEW file has no reason to carry one —
+  // so create_workflow blocks on it, surfaced as an error so the agent sees why.
+  const issues = parsed.issues.map((i) =>
+    i.code === RETIRED_SCHEMA_TAG ? { ...i, severity: "error" as const } : i,
+  );
+  if (!parsed.document || issues.some((i) => i.severity === "error")) {
+    return validationFailed(issues);
   }
 
   const canonical = ctx.serializeImport(parsed.document);
