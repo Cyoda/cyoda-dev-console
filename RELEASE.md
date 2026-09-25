@@ -70,6 +70,13 @@ desktop app, on its own `mcp-v*` tags via `.github/workflows/release-mcp.yml`.
    → `pnpm publish` with provenance. A stable version publishes to the `latest`
    dist-tag; a prerelease publishes to `next`.
 
+### Dist-tags
+`latest` is the newest stable release. `next` is the newest release of any kind,
+so it is **never older than `latest`**: a prerelease moves only `next`, and a
+stable release moves `latest` **and** `next` (the workflow's "Point `next` at the
+new stable version" step). `npx @cyoda/model-editor-mcp@next` is therefore always
+the most recent build, never a superseded rc.
+
 ### Rehearsing without publishing
 Trigger it manually (**Actions → Release MCP → Run workflow**) on any branch: it
 builds and runs `scripts/check-mcp-pack.sh` (pack + shape assertions) and
