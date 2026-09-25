@@ -31,7 +31,7 @@
     "@cyoda/workflow-layout": "0.1.7",
     "@cyoda/workflow-react": "0.6.2",
     "@playwright/test": "catalog:",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
