@@ -135,14 +135,14 @@ for content, browsable in both directions for navigation.
 ## Register with Claude Code
 
 **Consumers** — no clone, no build. Add this to `.mcp.json` at your project root
-(or run `claude mcp add model-editor -- npx -y @cyoda/model-editor-mcp@0.2.1 --project .`):
+(or run `claude mcp add model-editor -- npx -y @cyoda/model-editor-mcp@0.3.0 --project .`):
 
 ```json
 {
   "mcpServers": {
     "model-editor": {
       "command": "npx",
-      "args": ["-y", "@cyoda/model-editor-mcp@0.2.1", "--project", "."]
+      "args": ["-y", "@cyoda/model-editor-mcp@0.3.0", "--project", "."]
     }
   }
 }

@@ -27,14 +27,14 @@ auto-update is intentionally NOT enabled in this release (see
 ### model-editor-mcp (for AI CLIs)
 
 No clone or build — add it to `.mcp.json` at your project root (or run
-`claude mcp add model-editor -- npx -y @cyoda/model-editor-mcp@0.2.1 --project .`):
+`claude mcp add model-editor -- npx -y @cyoda/model-editor-mcp@0.3.0 --project .`):
 
 ```json
 {
   "mcpServers": {
     "model-editor": {
       "command": "npx",
-      "args": ["-y", "@cyoda/model-editor-mcp@0.2.1", "--project", "."]
+      "args": ["-y", "@cyoda/model-editor-mcp@0.3.0", "--project", "."]
     }
   }
 }
