@@ -74,18 +74,25 @@ jobs:
 
       # npm exits 0 when provenance was requested but not attached, so assert it
       # rather than discovering another unattested release on the registry later.
+      #
+      # The registry takes minutes, not seconds, to expose a fresh version: the
+      # 0.3.0 publish was attested but invisible for ~5 min, so a 60 s window
+      # failed this step after a good publish and skipped github-release. Poll
+      # for up to 10 min, bypassing npm's local cache on every attempt.
       - name: Assert the release is attested — tag push only
         if: ${{ github.event_name == 'push' }}
+        timeout-minutes: 12
         run: |
           set -euo pipefail
           version="$(jq -r .version apps/model-editor-mcp/package.json)"
-          for i in 1 2 3 4 5 6; do
-            if npm view "@cyoda/model-editor-mcp@${version}" dist.attestations.url 2>/dev/null | grep -q .; then
+          attempts=30
+          for i in $(seq 1 "$attempts"); do
+            if npm view "@cyoda/model-editor-mcp@${version}" dist.attestations.url --prefer-online 2>/dev/null | grep -q .; then
               echo "provenance-ok: ${version}"
               exit 0
             fi
-            echo "attestation not visible yet (attempt ${i}/6) — retrying in 10s"
-            sleep 10
+            echo "attestation not visible yet (attempt ${i}/${attempts}) — retrying in 20s"
+            sleep 20
           done
           echo "::error::published ${version} but no provenance attestation is registered"
           exit 1
