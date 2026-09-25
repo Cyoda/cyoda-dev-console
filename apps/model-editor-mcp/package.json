@@ -37,7 +37,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.2",
     "happy-dom": "^20.10.6",
     "lucide-react": "^1.23.0",
     "monaco-editor": "catalog:",
