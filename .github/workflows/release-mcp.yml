@@ -97,6 +97,26 @@ jobs:
           echo "::error::published ${version} but no provenance attestation is registered"
           exit 1
 
+      # Dist-tag policy: `next` is never older than `latest`. A prerelease
+      # publishes to `next` (above); a stable release publishes to `latest` and
+      # then moves `next` to the same version — otherwise `@next` keeps serving
+      # the last rc (0.2.1-rc.1 outlived 0.3.0). Runs after the attestation
+      # check, which has already waited for the version to be visible.
+      - name: Point `next` at the new stable version — stable tag push only
+        if: ${{ github.event_name == 'push' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          version="$(jq -r .version apps/model-editor-mcp/package.json)"
+          # Decide on the version, not the tag name: every tag is `mcp-v…`, so
+          # the tag always contains a hyphen.
+          case "$version" in
+            *-*) echo "prerelease ${version}: already published to next"; exit 0 ;;
+          esac
+          npm dist-tag add "@cyoda/model-editor-mcp@${version}" next
+          npm dist-tag ls @cyoda/model-editor-mcp
+
   # Surface the npm release on the repo's Releases page (npm publish alone
   # leaves only a git tag). Runs after a successful publish, tag pushes only.
   github-release:
