@@ -119,8 +119,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/entity-model-viewer
       '@cyoda/workflow-core':
-        specifier: 0.7.0
-        version: 0.7.0
+        specifier: 0.7.1
+        version: 0.7.1
       '@cyoda/workflow-editor-host':
         specifier: workspace:*
         version: link:../../packages/workflow-editor-host
@@ -128,23 +128,23 @@ importers:
         specifier: workspace:*
         version: link:../../packages/workflow-file-indexer
       '@cyoda/workflow-graph':
-        specifier: 0.4.1
-        version: 0.4.1
+        specifier: 0.4.2
+        version: 0.4.2
       '@cyoda/workflow-layout':
-        specifier: 0.1.6
-        version: 0.1.6
+        specifier: 0.1.7
+        version: 0.1.7
       '@cyoda/workflow-monaco':
-        specifier: 0.2.4
-        version: 0.2.4(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 0.2.5
+        version: 0.2.5(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@cyoda/workflow-project-model':
         specifier: workspace:*
         version: link:../../packages/workflow-project-model
       '@cyoda/workflow-react':
-        specifier: 0.6.1
-        version: 0.6.1(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(reactflow@11.11.4(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+        specifier: 0.6.2
+        version: 0.6.2(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(reactflow@11.11.4(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       '@cyoda/workflow-viewer':
-        specifier: 0.4.2
-        version: 0.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 0.4.3
+        version: 0.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-query':
         specifier: ^5.101.2
         version: 5.101.2(react@19.2.7)
@@ -222,8 +222,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/console-design-system
       '@cyoda/workflow-core':
-        specifier: 0.7.0
-        version: 0.7.0
+        specifier: 0.7.1
+        version: 0.7.1
       '@cyoda/workflow-editor-host':
         specifier: workspace:*
         version: link:../../packages/workflow-editor-host
@@ -231,14 +231,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/workflow-file-indexer
       '@cyoda/workflow-graph':
-        specifier: 0.4.1
-        version: 0.4.1
+        specifier: 0.4.2
+        version: 0.4.2
       '@cyoda/workflow-layout':
-        specifier: 0.1.6
-        version: 0.1.6
+        specifier: 0.1.7
+        version: 0.1.7
       '@cyoda/workflow-react':
-        specifier: 0.6.1
-        version: 0.6.1(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(reactflow@11.11.4(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+        specifier: 0.6.2
+        version: 0.6.2(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(reactflow@11.11.4(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.61.1
@@ -429,11 +429,11 @@ importers:
         specifier: workspace:*
         version: link:../console-design-system
       '@cyoda/workflow-core':
-        specifier: 0.7.0
-        version: 0.7.0
+        specifier: 0.7.1
+        version: 0.7.1
       '@cyoda/workflow-react':
-        specifier: 0.6.1
-        version: 0.6.1(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(reactflow@11.11.4(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
+        specifier: 0.6.2
+        version: 0.6.2(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(reactflow@11.11.4(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       zustand:
         specifier: ^5.0.0
         version: 5.0.14(@types/react@19.2.17)(immer@11.1.8)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7))
@@ -472,8 +472,8 @@ importers:
   packages/workflow-file-indexer:
     dependencies:
       '@cyoda/workflow-core':
-        specifier: 0.7.0
-        version: 0.7.0
+        specifier: 0.7.1
+        version: 0.7.1
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -580,17 +580,17 @@ packages:
   '@bazel/runfiles@6.5.0':
     resolution: {integrity: sha512-RzahvqTkfpY2jsDxo8YItPX+/iZ6hbiikw1YhE0bA9EKBR5Og8Pa6FHn9PO9M0zaXRVsr0GFQLKbB/0rzy9SzA==}
 
-  '@cyoda/workflow-core@0.7.0':
-    resolution: {integrity: sha512-YhhZSZMAx/OPU0r7EG1OBdZ7nM6SFN8YII7Fy4jPh8rnazMInAa5GpJ+C6LepW9I0zDBlKYsTAnPXxLi46Y9Iw==}
+  '@cyoda/workflow-core@0.7.1':
+    resolution: {integrity: sha512-2u+frgOXfb30YYxP5F9OFH/Y+22hhSoqRVuEmIdffQN52qLRDJeSLhDHLo+DfbCmxys1dKandOaX8C1cx7NRvw==}
 
-  '@cyoda/workflow-graph@0.4.1':
-    resolution: {integrity: sha512-ExkJ5J8Xgr5zy+WFrWSFB73mziCRBCt9OksAQqqc9eBOblr/Ywla0DAHLd8CirLjqRNFNc/4jMNhi9Xbvavytw==}
+  '@cyoda/workflow-graph@0.4.2':
+    resolution: {integrity: sha512-d7nYlUADRx0KxRUb3clqyB3kP4SeNxu+5RYY5XDR3XhlGbPRYsJQbjsycitkqDfB82eSi8kQEVDJtM7I3jeSvw==}
 
-  '@cyoda/workflow-layout@0.1.6':
-    resolution: {integrity: sha512-TfLt4jVw73recpp5rH4oSGTDwYHMbQnj7nSMtEmIhgWEEYyPl5liVa9/w6OqRgQ53eDyMljOupr1CJHRMP1OGQ==}
+  '@cyoda/workflow-layout@0.1.7':
+    resolution: {integrity: sha512-HzoFcpKAUIdBGCakR4eIbRNIfN++59sGOU5MIRFVNAfObn8Bz0u8S+qzsBxYqd3kFmCaIe6Vn/QwN7R4YTq22A==}
 
-  '@cyoda/workflow-monaco@0.2.4':
-    resolution: {integrity: sha512-+4IGz5JQnhJ9MeCAqUgGVxeK7jffHlNjka1EKlIJKaJJQxsg/SDX6YuOPcdOHaWselUe8+HZw0h9jvlyJYQbCA==}
+  '@cyoda/workflow-monaco@0.2.5':
+    resolution: {integrity: sha512-eTd68e2BGdlzPP8nJGhMITFYyaDUI6maQuzgwUeKP48MsdGX/8UB7km0ABr+YEL5ZHEehreySRC4DFnbtNlpnQ==}
     peerDependencies:
       monaco-editor: '>=0.45 <0.56'
       react: ^18.3.1 || ^19.0.0
@@ -601,15 +601,15 @@ packages:
       react-dom:
         optional: true
 
-  '@cyoda/workflow-react@0.6.1':
-    resolution: {integrity: sha512-ohCxa3J9RCS4DoJx/MbMIxMLQJVqemJtAIkTOdDi/j92EL1Hg9Q4QzgRLxxTsKJv0ePufc4HyVN4hDrvvoHkKQ==}
+  '@cyoda/workflow-react@0.6.2':
+    resolution: {integrity: sha512-FlsGitTSer3pPFuPYrSIjWyNF11GUjJmjFExutorFQSvT+VtepRppujVLqoYr1NX7A2mA2kz/tOVOk4H7T1I9Q==}
     peerDependencies:
       react: ^18.3.1 || ^19.0.0
       react-dom: ^18.3.1 || ^19.0.0
       reactflow: ^11
 
-  '@cyoda/workflow-viewer@0.4.2':
-    resolution: {integrity: sha512-0dl7LKRofFSKHDhHUZ22CCkZO2nBy/WG4p2TPD0YrJbNs1oHgaJQcCaXLXbiGr3vNQ8HLeTq2N/9/Ao3cDcf4g==}
+  '@cyoda/workflow-viewer@0.4.3':
+    resolution: {integrity: sha512-W1cQHf6ghQL6sidRtel3LsIqp6uuYORaB2rEBYOBR5XzhaJw85ct3uQGE5nGAGwgvPaLukpfGuz5cIiZXMkwFw==}
     peerDependencies:
       react: ^18.3.1 || ^19.0.0
       react-dom: ^18.3.1 || ^19.0.0
@@ -2822,25 +2822,25 @@ snapshots:
 
   '@bazel/runfiles@6.5.0': {}
 
-  '@cyoda/workflow-core@0.7.0':
+  '@cyoda/workflow-core@0.7.1':
     dependencies:
       immer: 11.1.8
       uuid: 14.0.0
       zod: 4.4.3
 
-  '@cyoda/workflow-graph@0.4.1':
+  '@cyoda/workflow-graph@0.4.2':
     dependencies:
-      '@cyoda/workflow-core': 0.7.0
+      '@cyoda/workflow-core': 0.7.1
 
-  '@cyoda/workflow-layout@0.1.6':
+  '@cyoda/workflow-layout@0.1.7':
     dependencies:
-      '@cyoda/workflow-core': 0.7.0
-      '@cyoda/workflow-graph': 0.4.1
+      '@cyoda/workflow-core': 0.7.1
+      '@cyoda/workflow-graph': 0.4.2
       elkjs: 0.11.1
 
-  '@cyoda/workflow-monaco@0.2.4(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@cyoda/workflow-monaco@0.2.5(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@cyoda/workflow-core': 0.7.0
+      '@cyoda/workflow-core': 0.7.1
       jsonc-parser: 3.3.1
       monaco-editor: 0.55.1
       zod: 4.4.3
@@ -2848,24 +2848,24 @@ snapshots:
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
-  '@cyoda/workflow-react@0.6.1(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(reactflow@11.11.4(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))':
+  '@cyoda/workflow-react@0.6.2(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(reactflow@11.11.4(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))':
     dependencies:
-      '@cyoda/workflow-core': 0.7.0
-      '@cyoda/workflow-graph': 0.4.1
-      '@cyoda/workflow-layout': 0.1.6
-      '@cyoda/workflow-monaco': 0.2.4(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@cyoda/workflow-viewer': 0.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@cyoda/workflow-core': 0.7.1
+      '@cyoda/workflow-graph': 0.4.2
+      '@cyoda/workflow-layout': 0.1.7
+      '@cyoda/workflow-monaco': 0.2.5(monaco-editor@0.55.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@cyoda/workflow-viewer': 0.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       reactflow: 11.11.4(@types/react@19.2.17)(immer@11.1.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
     transitivePeerDependencies:
       - monaco-editor
 
-  '@cyoda/workflow-viewer@0.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@cyoda/workflow-viewer@0.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@cyoda/workflow-core': 0.7.0
-      '@cyoda/workflow-graph': 0.4.1
-      '@cyoda/workflow-layout': 0.1.6
+      '@cyoda/workflow-core': 0.7.1
+      '@cyoda/workflow-graph': 0.4.2
+      '@cyoda/workflow-layout': 0.1.7
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
