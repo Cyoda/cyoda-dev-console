@@ -207,8 +207,19 @@ jobs:
           gh release upload "${{ github.ref_name }}" \
             dist/SHA256SUMS dist/cyoda-dev-console.png scripts/install.sh \
             --repo "${{ github.repository }}" --clobber
+      # A stable desktop release explicitly claims "Latest" — the Linux
+      # installer URL (releases/latest/download/install.sh) depends on it, and
+      # the MCP releases in this repo must never hold it. Prereleases don't.
       - name: Publish (un-draft) the release
-        run: gh release edit "${{ github.ref_name }}" --draft=false --repo "${{ github.repository }}"
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          case "$TAG" in
+            *-*) latest=() ;;
+            *)   latest=(--latest) ;;
+          esac
+          gh release edit "$TAG" --draft=false "${latest[@]}" --repo "${{ github.repository }}"
 
   publish-cask:
     needs: checksums

@@ -1,6 +1,5 @@
 [package]
 name = "cyoda-dev-console"
-version = "0.2.0"
 description = "Cyoda Dev Console"
 authors = ["Cyoda <info@cyoda.com>"]
 license = "MIT"

@@ -121,8 +121,12 @@ jobs:
           notes="Published to npm as \`@cyoda/model-editor-mcp@${version}\` (dist-tag \`${dist_tag}\`)."
           notes="${notes} Install: \`npm install -g @cyoda/model-editor-mcp@${version}\`."
           notes="${notes} https://www.npmjs.com/package/@cyoda/model-editor-mcp/v/${version}"
+          # --latest=false: the repo's "Latest" release belongs to the desktop
+          # app — the Linux installer is fetched from
+          # releases/latest/download/install.sh, which an MCP release lacks.
           gh release create "$TAG" \
             --repo "${{ github.repository }}" \
             --title "model-editor-mcp $version" \
             --notes "$notes" \
+            --latest=false \
             "${pre[@]}"
