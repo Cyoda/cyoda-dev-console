@@ -1,6 +1,6 @@
 // Curated, in-repo rule-file and bundle-document templates for the BYO AI surface.
 //
-// TODO(byo-ai): source rule-file content from Cyoda-platform/cyoda-skills SKILL.md pinned to
+// TODO(byo-ai): source rule-file content from Cyoda/cyoda-skills SKILL.md pinned to
 // a commit SHA and transform per agent (BYO_AI-spec §7, §14). For now these are hand-written
 // briefs that point the agent at the authoritative skills repo.
 
@@ -39,7 +39,7 @@ export interface TemplateInput {
   brief?: string;
 }
 
-const SKILLS_REPO = "https://github.com/Cyoda-platform/cyoda-skills";
+const SKILLS_REPO = "https://github.com/Cyoda/cyoda-skills";
 
 /**
  * Replace backticks in a path string so they cannot break an inline code fence.
