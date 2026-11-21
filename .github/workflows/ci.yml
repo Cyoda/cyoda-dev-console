@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       # Build first: workspace packages resolve to their gitignored dist/, so
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v7
       # Reads the pinned channel + components from the repo-root rust-toolchain.toml
       # (no `toolchain:` input, so the file wins) and caches the toolchain + crates.
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v2
         with: { cache-workspaces: "apps/dev-console/src-tauri" }
       - run: cargo fmt --check
       # --locked is the Cargo analogue of the js job's `--frozen-lockfile`: fail
