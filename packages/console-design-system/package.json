@@ -22,7 +22,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.6.0",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
