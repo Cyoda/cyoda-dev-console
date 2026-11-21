@@ -52,7 +52,7 @@ jobs:
   build-macos:
     needs: create-release
     if: ${{ always() && (github.event_name == 'workflow_dispatch' || needs.create-release.result == 'success') }}
-    runs-on: macos-14
+    runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
@@ -224,7 +224,7 @@ jobs:
   publish-cask:
     needs: checksums
     if: ${{ github.event_name == 'push' && !contains(github.ref_name, '-') }}
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v7
       - name: Download DMGs + checksums

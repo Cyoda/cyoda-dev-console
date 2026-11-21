@@ -2,7 +2,7 @@ name: CI
 on: [push, pull_request]
 jobs:
   js:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -23,7 +23,7 @@ jobs:
       - run: pnpm --filter @cyoda/model-editor-mcp exec playwright install --with-deps chromium
       - run: pnpm --filter @cyoda/model-editor-mcp test:e2e
   rust:
-    runs-on: macos-14
+    runs-on: macos-15
     defaults: { run: { working-directory: apps/dev-console/src-tauri } }
     steps:
       - uses: actions/checkout@v7
