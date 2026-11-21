@@ -1,7 +1,7 @@
 /** @vitest-environment happy-dom */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, cleanup, screen, fireEvent, act } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { ThemeProvider } from "@cyoda/console-design-system";
 import { parseImportPayload } from "@cyoda/workflow-core";
 import type { WorkflowEditorDocument } from "@cyoda/workflow-core";

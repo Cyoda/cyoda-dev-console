@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { ThemeProvider } from "@cyoda/console-design-system";
 import type { WorkflowEditorDocument } from "@cyoda/workflow-core";
 import { WorkflowEditor } from "@cyoda/workflow-react";

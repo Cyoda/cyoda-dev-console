@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, createEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { ThemeProvider } from "@cyoda/console-design-system";
 import { ProjectNameField } from "../ProjectNameField.js";
 

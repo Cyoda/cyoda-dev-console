@@ -28,6 +28,11 @@ updates:
       # also removed the editor.worker import path the dev-console build uses.
       # Drop this once a workflow-monaco release accepts monaco-editor >= 0.56.
       - dependency-name: "monaco-editor"
+      # TypeScript 7 is blocked by @typescript-eslint/parser, whose peer range
+      # is `>=4.8.4 <6.1.0`. Drop this once typescript-eslint supports TS 7, and
+      # move together with ../cyoda-workflow-editor, which shares the tooling.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: cargo
     directory: "/apps/dev-console/src-tauri"
