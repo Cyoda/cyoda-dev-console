@@ -8,7 +8,7 @@
 
 ## 0. Current state (what's already done)
 
-- The release tooling is merged to the `staging` branch of `Cyoda/cyoda-dev-console` (the default branch). The repo already lives under the **`Cyoda`** org (legacy `Cyoda-platform` URLs redirect).
+- The release tooling is merged to the `staging` branch of `Cyoda/cyoda-dev-console` (the default branch). The repo lives under the **`Cyoda`** org.
 - `release.yml` is implemented and **build-validated on real runners** via build-only `workflow_dispatch` rehearsals: macOS x64/arm64 compile + bundle the `.app`, Linux x64/arm64 build the AppImage, Windows builds nsis/msi, and the publish-path jobs correctly skip on dispatch.
 - **✅ SHIPPED — v0.1.0 released 2026-07-13.** The full runbook below was executed: `APPLE_*` org secrets, the `Cyoda/homebrew-cyoda` tap, the `cyoda-release-bot` App, SHA-pinned actions, and the first tagged release (`v0.1.0`). The GitHub Release carries the 2 DMGs + 2 AppImages + `SHA256SUMS` + `install.sh` + icon, and `Casks/cyoda-dev-console.rb` was committed to the tap by `cyoda-release-bot` with matching per-arch SHAs. DMGs verify `Notarized Developer ID`.
 - **Three workflow requirements surfaced only on the first *real* tag** (the build-only `workflow_dispatch` rehearsal can't exercise them, because it never uploads or publishes). All are now fixed in `release.yml`; keep them in mind for cyoda-go (§7):

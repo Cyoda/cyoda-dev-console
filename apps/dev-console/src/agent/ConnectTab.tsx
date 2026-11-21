@@ -23,7 +23,7 @@ const AGENTS: AgentCardMeta[] = [
     id: "claude",
     label: "Claude Code",
     commands: [
-      "/plugin marketplace add Cyoda-platform/cyoda-skills",
+      "/plugin marketplace add Cyoda/cyoda-skills",
       "/plugin install cyoda@cyoda",
       "/reload-plugins",
     ],
@@ -31,7 +31,7 @@ const AGENTS: AgentCardMeta[] = [
   {
     id: "gemini",
     label: "Gemini CLI",
-    commands: ["gemini extensions install Cyoda-platform/cyoda-skills"],
+    commands: ["gemini extensions install Cyoda/cyoda-skills"],
     pending: true,
     note: "Install verb pending verification — confirm against current Gemini CLI docs before relying on it.",
   },
@@ -59,7 +59,7 @@ export function ConnectTab() {
       <p style={{ fontFamily: t.font.sans, fontSize: t.font.sizes.md, color: t.color.textMuted, margin: 0 }}>
         Install Cyoda skills into your agent, then write a rule file into the project so the agent
         has Cyoda context. Authoritative skills live at{" "}
-        <code style={{ fontFamily: t.font.mono }}>github.com/Cyoda-platform/cyoda-skills</code>.
+        <code style={{ fontFamily: t.font.mono }}>github.com/Cyoda/cyoda-skills</code>.
       </p>
       {AGENTS.map((agent) => (
         <AgentCard
