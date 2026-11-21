@@ -31,9 +31,11 @@ overrides:
   # GHSA-mrhx-c7xc-m3w5 (high) — memory exhaustion validating oversized
   # constrained collections. Reaches both shipped artifacts at runtime via
   # @cyoda/workflow-core, which pins zod exactly (0.7.1 -> 4.4.3), so the
-  # catalog bump alone does not move it. Drop once a workflow-core release
+  # catalog bump alone does not move it. The override follows the catalog
+  # (rather than pinning 4.6.6) so a catalog bump moves workflow-core's copy too
+  # and the bundles never carry two zods. Drop once a workflow-core release
   # pins zod >= 4.6.6.
-  "zod@<4.6.6": "4.6.6"
+  zod: "catalog:"
 
 # Supply-chain hardening: no release younger than 14 days (14*24*60 minutes)
 # enters the lockfile, so a compromised publish has time to be caught and
