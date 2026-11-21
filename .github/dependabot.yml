@@ -24,6 +24,10 @@ updates:
     ignore:
       # Hand-pinned lockstep deps — bumped manually, not by Dependabot.
       - dependency-name: "@cyoda/workflow-*"
+      # Peer of @cyoda/workflow-monaco, which declares `>=0.45 <0.56`, and 0.57
+      # also removed the editor.worker import path the dev-console build uses.
+      # Drop this once a workflow-monaco release accepts monaco-editor >= 0.56.
+      - dependency-name: "monaco-editor"
 
   - package-ecosystem: cargo
     directory: "/apps/dev-console/src-tauri"
