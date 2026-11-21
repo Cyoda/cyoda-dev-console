@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { ThemeProvider } from "@cyoda/console-design-system";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { AgentContextProvider } from "../agent/AgentContext.js";

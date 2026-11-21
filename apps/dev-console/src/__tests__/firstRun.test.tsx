@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { FirstRun } from "../routes/first-run.js";
 
 // Tauri IPC is not available in test env — mock the IPC module.

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { ThemeProvider } from "@cyoda/console-design-system";
 import { ProjectExplorer } from "../components/ProjectExplorer.js";
 import type { WorkflowFileIndexEntry } from "@cyoda/workflow-file-indexer";

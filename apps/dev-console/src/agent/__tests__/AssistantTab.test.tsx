@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import type { DevProject } from "@cyoda/workflow-project-model";
 import { ThemeProvider } from "@cyoda/console-design-system";
 import { AssistantTab } from "../AssistantTab.js";
