@@ -8,8 +8,9 @@ import { findByName } from "../discovery.js";
  * `get_workflow(name)` — read a single workflow's RAW on-disk file contents. Deliberately does
  * NOT call `ctx.parseImport`/`ctx.serializeImport`: `show_workflow` (and the write side of
  * `update_workflow`) round-trip through that pipeline, which CANONICALIZES the document —
- * renaming `operatorType` -> `operation`, dropping empty-string `context`, and injecting
- * `disabled: false` where absent (see those tools' manifest descriptions). That means
+ * e.g. renaming `operatorType` -> `operation`, dropping empty-string `context`, injecting
+ * `disabled: false` where absent, and the cyoda-go 0.9 fix-ups (full list: README.md
+ * § Canonicalization, and `show_workflow`'s manifest description). That means
  * `show_workflow` -> `update_workflow` silently commits those transforms even when the human
  * never touched the field. `get_workflow` is the byte-faithful counterpart — mirrors `get_entity`
  * for entities, giving workflows the same pure/raw read entities already had.
