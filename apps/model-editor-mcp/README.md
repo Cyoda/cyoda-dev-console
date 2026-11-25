@@ -67,11 +67,27 @@ discovers it.
 ## Canonicalization — `show_workflow`/`update_workflow`/`create_workflow` vs. raw reads
 
 Three workflow tools round-trip content through the same parse → serialize
-pipeline, which **canonicalizes**: `operatorType` is renamed to `operation`,
-an empty-string `context` is dropped, and `disabled: false` is injected
-wherever absent. That means calling `show_workflow` and then writing the
-result back unchanged via `update_workflow` still commits those transforms —
-round-tripping is not a no-op. `get_workflow` is the byte-faithful
+pipeline, which **canonicalizes** toward the format cyoda-go 0.9.0 accepts:
+
+- a criterion's `operatorType` (or, on a leaf condition, `operator`) is
+  renamed to `operation`;
+- an array criterion's legacy `value` list is moved to `values`
+  (`array-criterion-legacy-value` warning), and an array criterion with no
+  operator gets `operation: "EQUALS"` (`array-criterion-operator-defaulted`
+  warning);
+- criterion members that aren't part of the cyoda-go format are dropped
+  (`criterion-keys-dropped` warning);
+- a processor's `startNewTxOnDispatch` is moved out of `config` onto the
+  processor itself;
+- a schedule's `delayMs` of `0` or less is dropped (the 0.8.3/0.8.4 exporters
+  wrote `delayMs: 0` next to every `schedule.function`);
+- an empty-string `context` is dropped, and `disabled: false` is injected
+  wherever absent.
+
+cyoda-go 0.9.0 refuses most of the pre-canonical forms at import. Calling
+`show_workflow` and then writing the result back unchanged via
+`update_workflow` still commits these transforms, so round-tripping is not a
+no-op. `get_workflow` is the byte-faithful
 counterpart: it returns the on-disk bytes with no transformation at all, for
 whenever you need to know exactly what's on disk (e.g. before deciding
 whether a write would actually change anything). `get_entity`/`show_entity`
@@ -86,7 +102,7 @@ advertised to Claude).
 
 Workflows (15):
 - `list_workflows()` → `{ workflows: [{ name, path, states, transitions, valid, reason? }] }` — `reason` is present ONLY when `valid` is `false` (the first error-severity diagnostic's message, or a short parse-failure note), so you can learn why a workflow is invalid without a separate `validate_workflow` round-trip
-- `show_workflow(name)` — render it in the browser + return the parsed document (**canonicalizes**: parse -> serialize renames `operatorType` -> `operation`, drops empty `context`, injects `disabled:false`)
+- `show_workflow(name)` — render it in the browser + return the parsed document (**canonicalizes** — see [Canonicalization](#canonicalization--show_workflowupdate_workflowcreate_workflow-vs-raw-reads))
 - `get_workflow(name)` — read the raw on-disk JSON contents, byte-faithfully — no canonicalization (unlike `show_workflow`/`update_workflow`/`create_workflow`)
 - `create_workflow(name, content)` — validated write of a brand-new workflow file; rejects an already-existing name, invalid JSON, or a semantically-invalid document (writes nothing on rejection); **canonicalizes** before writing, same pipeline as `update_workflow`
 - `update_workflow(name, content)` — validated whole-document write + diff (writes nothing on failure); **canonicalizes** the content before writing, same normalization as `show_workflow`

@@ -24,10 +24,10 @@ updates:
     ignore:
       # Hand-pinned lockstep deps — bumped manually, not by Dependabot.
       - dependency-name: "@cyoda/workflow-*"
-      # Peer of @cyoda/workflow-monaco, which declares `>=0.45 <0.56`, and 0.57
-      # also removed the editor.worker import path the dev-console build uses.
-      # Drop this once a workflow-monaco release accepts monaco-editor >= 0.56.
+      # Peer of @cyoda/workflow-monaco, whose 0.3 range is `>=0.45 <0.58`.
+      # Raise the bound when a workflow-monaco release widens that range.
       - dependency-name: "monaco-editor"
+        versions: [">=0.58.0"]
       # TypeScript 7 is blocked by @typescript-eslint/parser, whose peer range
       # is `>=4.8.4 <6.1.0`. Drop this once typescript-eslint supports TS 7, and
       # move together with ../cyoda-workflow-editor, which shares the tooling.
