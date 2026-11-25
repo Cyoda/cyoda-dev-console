@@ -10,7 +10,10 @@ concurrency:
 
 permissions:
   contents: read
-  id-token: write         # lets npm mint the provenance attestation
+  # npm trusted publishing: GitHub mints an OIDC token that npm swaps for a
+  # short-lived publish credential, and the same token signs the provenance
+  # attestation. No npm token is stored anywhere.
+  id-token: write
 
 jobs:
   guard:
@@ -36,7 +39,16 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          registry-url: https://registry.npmjs.org   # writes the .npmrc that reads NODE_AUTH_TOKEN
+          # No `registry-url`: that would write an .npmrc with a placeholder
+          # `_authToken`. Publishing authenticates via npm trusted publishing
+          # (OIDC), not a token — see RELEASE.md "model-editor-mcp (npm)".
+
+      # Trusted publishing needs npm >= 11.5.1 and `npm stage publish` a recent
+      # 11.x; Node 22 bundles npm 10.x. Exact pin, >= 14 days old (supply-chain
+      # cooldown, like pnpm-workspace.yaml) — same version cyoda-workflow-editor
+      # releases with.
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@11.21.2 && npm --version
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter './packages/*' build        # workspace deps first — esbuild resolves their dist/
       - run: pnpm --filter @cyoda/model-editor-mcp build
@@ -45,20 +57,26 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: ./scripts/check-mcp-pack.sh
 
-      # pnpm packs, npm publishes. Each does the half the other can't:
+      # pnpm packs, npm stages. Each does the half the other can't:
       #
       # - `pnpm pack` rewrites the pnpm-only specifiers in the manifest
       #   (`workspace:*` on the four internal packages, `catalog:` on 15 devDeps)
       #   into real versions. npm doesn't understand either, so packing with npm
       #   would publish those literals.
-      # - `npm publish --provenance` mints the SLSA attestation. pnpm 9 got this
-      #   for free by shelling out to npm, which honoured `publishConfig.provenance`;
-      #   pnpm 10+ publishes natively, ignores that field, and exposes no flag of its
-      #   own — which is how 0.2.0 shipped unattested.
-      - name: Publish to npm — tag push only
+      # - `npm stage publish --provenance` authenticates via OIDC trusted
+      #   publishing and mints the SLSA attestation. The package's trusted
+      #   publisher on npmjs.com has "Allow npm publish" UNCHECKED, so a plain
+      #   `npm publish` is refused (`E403 OIDC permission denied for this
+      #   action`): CI can only *stage* a version, and it stays invisible until a
+      #   maintainer approves it with 2FA. A compromised workflow therefore can't
+      #   put a version live on its own.
+      #
+      # The attestation check and moving `next` to a new stable version can't
+      # run here — a staged version isn't visible until approved, and the trusted
+      # publisher doesn't allow `npm dist-tag` either. Both happen after approval
+      # via scripts/mcp-post-approval.sh (RELEASE.md).
+      - name: Stage on npm (awaits maintainer approval) — tag push only
         if: ${{ github.event_name == 'push' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
           version="$(jq -r .version apps/model-editor-mcp/package.json)"
@@ -69,56 +87,31 @@ jobs:
           out="$(mktemp -d)"
           pnpm --filter @cyoda/model-editor-mcp pack --pack-destination "$out"
           tgz="$(ls "$out"/*.tgz)"
-          echo "publishing ${version} (${tgz##*/}) to dist-tag '${dist_tag}'"
-          npm publish "$tgz" --provenance --tag "$dist_tag"
-
-      # npm exits 0 when provenance was requested but not attached, so assert it
-      # rather than discovering another unattested release on the registry later.
-      #
-      # The registry takes minutes, not seconds, to expose a fresh version: the
-      # 0.3.0 publish was attested but invisible for ~5 min, so a 60 s window
-      # failed this step after a good publish and skipped github-release. Poll
-      # for up to 10 min, bypassing npm's local cache on every attempt.
-      - name: Assert the release is attested — tag push only
-        if: ${{ github.event_name == 'push' }}
-        timeout-minutes: 12
-        run: |
-          set -euo pipefail
-          version="$(jq -r .version apps/model-editor-mcp/package.json)"
-          attempts=30
-          for i in $(seq 1 "$attempts"); do
-            if npm view "@cyoda/model-editor-mcp@${version}" dist.attestations.url --prefer-online 2>/dev/null | grep -q .; then
-              echo "provenance-ok: ${version}"
-              exit 0
+          echo "staging ${version} (${tgz##*/}) with dist-tag '${dist_tag}'"
+          # Run from the tarball's directory so npm doesn't apply the
+          # workspace root's context.
+          cd "$out"
+          set +e
+          log="$(npm stage publish "./${tgz##*/}" --tag "$dist_tag" --access public --provenance 2>&1)"
+          rc=$?
+          set -e
+          printf '%s\n' "$log"
+          if [ "$rc" -ne 0 ]; then
+            # Re-running a failed workflow: a staged-but-unapproved version
+            # can't be seen by `npm view`, so the only signal it's already
+            # there is the registry rejecting the duplicate.
+            if printf '%s' "$log" | grep -Eqi 'E409|EPUBLISHCONFLICT|cannot publish over|already (been )?(staged|published|exists)'; then
+              echo "::notice::${version} is already staged or published; treating as staged"
+            else
+              exit "$rc"
             fi
-            echo "attestation not visible yet (attempt ${i}/${attempts}) — retrying in 20s"
-            sleep 20
-          done
-          echo "::error::published ${version} but no provenance attestation is registered"
-          exit 1
+          fi
+          echo "::notice::@cyoda/model-editor-mcp@${version} is STAGED, not live. Approve it on npmjs.com (or 'npm stage approve'), then run scripts/mcp-post-approval.sh ${version}"
 
-      # Dist-tag policy: `next` is never older than `latest`. A prerelease
-      # publishes to `next` (above); a stable release publishes to `latest` and
-      # then moves `next` to the same version — otherwise `@next` keeps serving
-      # the last rc (0.2.1-rc.1 outlived 0.3.0). Runs after the attestation
-      # check, which has already waited for the version to be visible.
-      - name: Point `next` at the new stable version — stable tag push only
-        if: ${{ github.event_name == 'push' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-          version="$(jq -r .version apps/model-editor-mcp/package.json)"
-          # Decide on the version, not the tag name: every tag is `mcp-v…`, so
-          # the tag always contains a hyphen.
-          case "$version" in
-            *-*) echo "prerelease ${version}: already published to next"; exit 0 ;;
-          esac
-          npm dist-tag add "@cyoda/model-editor-mcp@${version}" next
-          npm dist-tag ls @cyoda/model-editor-mcp
-
-  # Surface the npm release on the repo's Releases page (npm publish alone
-  # leaves only a git tag). Runs after a successful publish, tag pushes only.
+  # Surface the npm release on the repo's Releases page (npm alone leaves only
+  # a git tag). Runs once the version is staged — i.e. before npm approval, as
+  # in cyoda-workflow-editor. If the staged version is rejected instead, delete
+  # this release and its tag.
   github-release:
     needs: [build-and-publish]
     if: ${{ github.event_name == 'push' }}

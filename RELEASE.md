@@ -67,15 +67,28 @@ desktop app, on its own `mcp-v*` tags via `.github/workflows/release-mcp.yml`.
 2. Push a tag `mcp-vX.Y.Z` (or `mcp-vX.Y.Z-rc.N`).
 3. `release-mcp.yml` runs: `guard` (tag == package.json version, suffix included)
    → build workspace deps → esbuild-bundle the server + Vite-build `web/dist`
-   → `pnpm publish` with provenance. A stable version publishes to the `latest`
-   dist-tag; a prerelease publishes to `next`.
+   → `pnpm pack` → `npm stage publish --provenance` (OIDC trusted publishing, no
+   token) → GitHub Release. A stable version is staged with the `latest`
+   dist-tag; a prerelease with `next`.
+4. **Approve the staged version** — it is *not live yet*: `npm view` still shows
+   the previous version and `npx` can't fetch the new one. A maintainer with
+   publish rights on `@cyoda` approves it (2FA required) on npmjs.com, or from a
+   laptop with npm ≥ 11.21: `npm stage list @cyoda/model-editor-mcp` →
+   (optionally `npm stage download <id>` to inspect) → `npm stage approve <id>`.
+   CI's short-lived credential can't run `npm stage` subcommands, so approval
+   always needs a person. To reject instead, also delete the `mcp-v…` tag and its
+   GitHub Release.
+5. Run `scripts/mcp-post-approval.sh` (logged in to npm as that maintainer). It
+   waits for the version to go live, asserts the provenance attestation, and for
+   a stable version moves `next` onto it (see Dist-tags).
 
 ### Dist-tags
 `latest` is the newest stable release. `next` is the newest release of any kind,
 so it is **never older than `latest`**: a prerelease moves only `next`, and a
-stable release moves `latest` **and** `next` (the workflow's "Point `next` at the
-new stable version" step). `npx @cyoda/model-editor-mcp@next` is therefore always
-the most recent build, never a superseded rc.
+stable release moves `latest` **and** `next` (`latest` when it is approved,
+`next` via `scripts/mcp-post-approval.sh` — CI may not run `npm dist-tag`).
+`npx @cyoda/model-editor-mcp@next` is therefore always the most recent build,
+never a superseded rc.
 
 ### Rehearsing without publishing
 Trigger it manually (**Actions → Release MCP → Run workflow**) on any branch: it
@@ -84,11 +97,32 @@ builds and runs `scripts/check-mcp-pack.sh` (pack + shape assertions) and
 versions are immutable.
 
 ### Prerequisites (one-time)
-- **`NPM_TOKEN`** repo secret: a granular npm access token with **read+write on the
-  `@cyoda` scope** (scope-level so the first publish can create the package). If
-  npm rejects the very first publish of the brand-new name, use a classic
-  Automation token for that one publish, then switch back. Provenance additionally
-  requires this repo stay **public**.
+Publishing uses **npm trusted publishing** (OIDC) with **staged publishing**, the
+same setup as `cyoda-workflow-editor` (its `ai/npm-release-mechanism.md`). No npm
+token is stored: npm revoked classic Automation tokens, and the granular
+"Bypass 2FA" tokens that replaced them expire within 90 days, so a token-based
+release breaks quietly at the next publish (it surfaces as `E404 Not Found - PUT
+https://registry.npmjs.org/@cyoda%2f…`).
+
+On npmjs.com → `@cyoda/model-editor-mcp` → Settings → Trusted Publisher →
+GitHub Actions:
+
+- Organization `Cyoda`; repository `cyoda-dev-console`; workflow filename
+  `release-mcp.yml`; environment blank.
+- **"Allow npm publish": unchecked** — CI may only *stage* versions, which wait
+  for maintainer approval. A compromised workflow or dependency can't put a
+  version live by itself.
+- **"Allow npm dist-tag": unchecked** — CI never runs `npm dist-tag`; the
+  dist-tag is set by `npm stage publish --tag`, and `next` is moved after
+  approval by a maintainer (`scripts/mcp-post-approval.sh`). A staged version's
+  tag can't be changed — reject it and re-stage instead.
+
+The trusted publisher names the workflow by **filename**: renaming
+`release-mcp.yml` breaks publishing until the npm setting is updated.
+`release-mcp.yml` needs `permissions: id-token: write`, an npm ≥ 11.5.1 (it
+installs an exact 11.x; Node 22 ships 10.x), and **no** `registry-url` on
+`setup-node` (that writes a placeholder-token `.npmrc`). Provenance additionally
+requires this repo stay **public**.
 
 ### First release
 The **first-ever** publish must be a stable `0.1.0` (not an rc), so a `latest`
@@ -110,4 +144,6 @@ A "release" is an event, not one trigger. To cut both artifacts:
 3. `release.yml` and `release-mcp.yml` run independently and in parallel; neither
    gates the other. A failure in one does not roll back the other — re-run the
    failed side (the two are not a single transaction). The desktop half needs the
-   Apple secrets provisioned (see Prerequisites above); the MCP half does not.
+   Apple secrets provisioned (see Prerequisites above); the MCP half does not,
+   but it isn't live until a maintainer approves the staged npm version and
+   runs `scripts/mcp-post-approval.sh` (MCP steps 4–5 above).
