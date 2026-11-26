@@ -2,6 +2,12 @@ name: Smoke
 on:
   push:
     branches: [staging]
+
+# One run per workflow per PR (or per branch for pushes): a newer commit
+# cancels the older, now-superseded run instead of both burning runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   macos:
     runs-on: macos-15
