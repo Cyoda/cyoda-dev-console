@@ -13,6 +13,7 @@ name: e2e
 # merges, so releases stay covered.
 on:
   push:
+    branches: [staging, main]
     paths:
       - "apps/dev-console/**"
       - ".github/workflows/e2e.yml"
@@ -20,6 +21,12 @@ on:
     paths:
       - "apps/dev-console/**"
       - ".github/workflows/e2e.yml"
+
+# One run per workflow per PR (or per branch for pushes): a newer commit
+# cancels the older, now-superseded run instead of both burning runners.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   e2e:
